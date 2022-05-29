@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/styles/tailwind.css";
@@ -10,14 +10,19 @@ import "assets/styles/tailwind.css";
 import ForensicsDashboard from "layouts/index.js";
 
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+
+root.render(
   <BrowserRouter>
-    <Switch>
+    <Routes>
       {/* add routes with layouts */}
-      <Route path="/" component={ForensicsDashboard} />
+      <Route path="/" element={<ForensicsDashboard />} />
       {/* add redirect for first page */}
-      <Redirect from="*" to="/" />
-    </Switch>
-  </BrowserRouter>,
-  document.getElementById("root")
+      <Route
+        path="*"
+        element={<Navigate to="/" replace />}
+    />
+    </Routes>
+  </BrowserRouter>
 );
