@@ -47,7 +47,7 @@
     "dev": "npx webpack serve --mode development",
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production --node-env=production",
-    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm run build:tailwind && npm run build:prod",
+    "install:clean": "rm -rf node_modules && npm install && npm run build:tailwind && npm run build:prod",
     "build:tailwind": "tailwind build src/assets/styles/index.css -o src/assets/styles/tailwind.css"
   },
   "eslintConfig": {
