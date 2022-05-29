@@ -1,13 +1,11 @@
-import React from "react";
+import * as React from "react";
+import CardStats from "../Cards/CardStats";
 
-// components
-
-import CardStats from "components/Cards/CardStats.js";
-
-export default function HeaderStats() {
-  return (
-    <>
-      {/* Header */}
+export default class HeaderStats extends React.Component {
+  render(){
+    return (
+      <>
+        {/* Header */}
       <div className="relative bg-sky-600 md:pt-32 pb-32 pt-12">
         <div className="px-4 md:px-10 mx-auto w-full">
           <div>
@@ -66,5 +64,6 @@ export default function HeaderStats() {
         </div>
       </div>
     </>
-  );
+    );
+  }
 }
