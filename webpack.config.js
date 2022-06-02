@@ -34,7 +34,7 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "src/tailwind.css",
+      filename: "./tailwind.css",
     }),
     new HtmlWebpackPlugin({
       filename: "index.html",

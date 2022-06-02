@@ -3,6 +3,7 @@ import * as ReactDOM from "react-dom";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 
 import './assets/styles/tailwind.css';
+import 'antd/dist/antd.css';
 
 import ForensicsDashboard from './views/ForensicsDashboard';
 
