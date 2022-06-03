@@ -11,7 +11,7 @@ type DataType = {
   timestamp: string;
   divergingBlockNumber: number;
   divergingBlockHash: string;
-  numberOfAffectedNodes: number;
+  numberOfAttackerNodes: number;
   numberOfSuspeciousNodes: number;
 }
 
@@ -31,19 +31,13 @@ const columns: ColumnsType<DataType> = [
     fixed: 'left',
   },
   {
-    title: 'Num. affected nodes',
+    title: 'Num. attacker nodes',
     width: 200,
-    dataIndex: 'numberOfAffectedNodes',
-    key: 'numberOfAffectedNodes',
+    dataIndex: 'numberOfAttackerNodes',
+    key: 'numberOfAttackerNodes',
     fixed: 'left',
   },
-  {
-    title: 'Num. suspecious nodes',
-    width: 200,
-    dataIndex: 'numberOfSuspeciousNodes',
-    key: 'numberOfSuspeciousNodes',
-    fixed: 'left',
-  },
+
   {
     title: 'Date',
     width: 150,

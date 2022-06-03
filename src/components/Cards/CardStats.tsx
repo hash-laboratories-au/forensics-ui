@@ -1,15 +1,13 @@
 import * as React from "react";
-import * as PropTypes from "prop-types";
 
 interface CardStats {
   statSubtitle : string;
   statTitle: string;
-  statArrow: string;
-  statPercent: string;
+  statArrow?: string;
   statPercentColor: string;
-  statDescripiron: string;
-  statIconName: string;
+  statDescripiron?: string;
   statIconColor: string;
+  icon: JSX.Element;
 }
 
 
@@ -17,11 +15,10 @@ export default function CardStats({
   statSubtitle ,
   statTitle,
   statArrow,
-  statPercent,
   statPercentColor,
   statDescripiron,
-  statIconName,
   statIconColor,
+  icon
 }: CardStats) {
   return (
     <>
@@ -43,7 +40,8 @@ export default function CardStats({
                   statIconColor
                 }
               >
-                <i className={statIconName}></i>
+              {icon}
+                
               </div>
             </div>
           </div>
@@ -58,7 +56,6 @@ export default function CardStats({
                     : ""
                 }
               ></i>{" "}
-              {statPercent}%
             </span>
             <span className="whitespace-nowrap">{statDescripiron}</span>
           </p>

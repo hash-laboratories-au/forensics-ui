@@ -77,7 +77,7 @@ const generateFakeForensicsReports = (numberOfFakeReports: number) =>{
       timestamp: randomDate(new Date(2020, 0, 1), new Date()),
       divergingBlockNumber: Math.floor(Math.random() *1000000),
       divergingBlockHash: `0x${uuidv4()}`,
-      numberOfAffectedNodes: Math.floor(Math.random() *100),
+      numberOfAttackerNodes: Math.floor(Math.random() *100),
       numberOfSuspeciousNodes: Math.floor(Math.random() *10)
     });
   }
