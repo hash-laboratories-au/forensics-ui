@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Table } from 'antd';
+import { Table, Segmented } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
 
 
@@ -65,7 +65,11 @@ export default class ForensicsTable extends React.Component {
   }
   render() {
     return (
-      <Table columns={columns} dataSource={this.state.forensicsReports} scroll={{ x: 1300 }} />
+      <div>
+        <Segmented size="large" options={['Last 7 Days', 'Last 30 days', 'All History']} />
+        <br></br>
+        <Table columns={columns} dataSource={this.state.forensicsReports} scroll={{ x: 1300 }} />
+      </div>
     ); 
   }
 }

@@ -897,6 +897,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.code-box-demo {
+  overflow-x: auto;
+}
+
+.code-box-demo .ant-segmented {
+  margin-bottom: 10px;
+}
+
 @media (min-width: 768px) {
   .md\:px-10 {
     padding-left: 2.5rem;
@@ -923,4 +931,3 @@ Ensure the default browser behavior of the `hidden` attribute.
     width: 25%;
   }
 }
-
