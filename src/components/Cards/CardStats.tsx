@@ -3,8 +3,6 @@ import * as React from "react";
 interface CardStats {
   statSubtitle : string;
   statTitle: string;
-  statArrow?: string;
-  statPercentColor: string;
   statDescripiron?: string;
   statIconColor: string;
   icon: JSX.Element;
@@ -14,8 +12,6 @@ interface CardStats {
 const CardStats = ({
   statSubtitle ,
   statTitle,
-  statArrow,
-  statPercentColor,
   statDescripiron,
   statIconColor,
   icon
@@ -45,20 +41,9 @@ const CardStats = ({
               </div>
             </div>
           </div>
-          <p className="text-sm text-slate-400 mt-4">
-            <span className={statPercentColor + " mr-2"}>
-              <i
-                className={
-                  statArrow === "up"
-                    ? "fas fa-arrow-up"
-                    : statArrow === "down"
-                    ? "fas fa-arrow-down"
-                    : ""
-                }
-              ></i>{" "}
-            </span>
+          <div className="text-sm text-slate-400 mt-4">
             <span className="whitespace-nowrap">{statDescripiron}</span>
-          </p>
+          </div>
         </div>
       </div>
     </>

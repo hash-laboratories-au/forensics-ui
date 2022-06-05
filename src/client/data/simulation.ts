@@ -99,3 +99,28 @@ export const loadRealtimeNewReports = () => {
   const numberOfReports = Math.round(Math.random());
   return generateFakeForensicsReports(numberOfReports);
 };
+
+let latestBlockNumber = Math.floor(Math.random() *1000000);
+let committedBlockNumber = latestBlockNumber -3;
+export const latestSummary = () => {
+  const blocks = {
+    latestBlock: {
+      hash: `0x${uuidv4()}`,
+      number: latestBlockNumber.toString()
+    },
+    latestCommittedBlock: {
+      hash: `0x${uuidv4()}`,
+      number: committedBlockNumber.toString()
+    },
+    numberOfAttackEvents: '2',
+    numberOfAttackers: '5'
+  };
+  
+  latestBlockNumber++;
+  committedBlockNumber = latestBlockNumber -3;
+  
+  
+  
+  
+  return blocks;
+};

@@ -1,6 +1,6 @@
 import { sleep } from './utils';
 import {Axios} from 'axios';
-import { loadInitialReports, loadInitialReports_last30days, loadInitialReports_last7days, loadRealtimeNewReports } from './data/simulation';
+import { latestSummary, loadInitialReports, loadInitialReports_last30days, loadInitialReports_last7days, loadRealtimeNewReports } from './data/simulation';
 
 const instance = new Axios({
   baseURL: '', // TODO: Add the baseURL of the backend service
@@ -36,7 +36,7 @@ export const loadInitialForensicsReports = async (range: string) => {
 };
 
 export const loadNewForensicsReports = async (lastItemId?: string) => {
-  await sleep(1);
+  await sleep(1000);
   return loadRealtimeNewReports().map(r => {
     return {
       ...r,
@@ -45,4 +45,10 @@ export const loadNewForensicsReports = async (lastItemId?: string) => {
       }
     };
   });
+};
+
+// Summary includes latest blocks, committed blocks, number of attacks and number of attackers
+export const getLatestSummary = async (latestBlockHash?: string) => {
+  await sleep(2000);
+  return latestSummary();
 };

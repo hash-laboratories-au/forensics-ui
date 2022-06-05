@@ -60,42 +60,39 @@ const ALL_HISTORY = 'All History';
 
 const ForensicsTable = () => {
   const [segmentValue, setSegmentValue]: [string, (v: string) => void] = React.useState<string>(LAST_7_DAYS);
-  const [forensicsReports, setForensicsReport]: [DataType[], (report: DataType[]) => void] = React.useState<DataType[]>([]);
-  const [incomingReports, setIncomingReports]: [DataType[], (report: DataType[]) => void] = React.useState<DataType[]>([]);
+  const [forensicsReports, setForensicsReports] = React.useState<DataType[]>([]);
   
-  let subscriptionId: NodeJS.Timer;
   const onSegmentValueChange = (v: string) => {
-    setForensicsReport([]);
+    setForensicsReports([]);
     setSegmentValue(v);
   };
   
   const subscribeToRealtimeForensicsReport = () => {
-    subscriptionId = setInterval(async () => {
+    setInterval(async () => {
       const newForensicsReports = await loadNewForensicsReports();
       if (newForensicsReports.length) {
-        setIncomingReports(newForensicsReports);
+        setForensicsReports(p => ([...newForensicsReports, ...p]));
       }
     }, 5000);
   };
+  React.useEffect(() => {
+    subscribeToRealtimeForensicsReport();
+  }, []);
   
   React.useEffect(() => {
-    // Clean the interval job first
-    if(subscriptionId) {
-      clearInterval(subscriptionId);
-    }
+    let isSubscribed = true;
     // Fetch the inital report
     const fetchAndSetInitialReports = async() => {
       const reports = await loadInitialForensicsReports(segmentValue.toUpperCase().split(" ").join('_'));
-      setForensicsReport(reports);
-      subscribeToRealtimeForensicsReport();
+      if (isSubscribed) {
+        setForensicsReports(p => ([...reports, ...p]));
+      }
     };
     fetchAndSetInitialReports();
+    return () => {
+      isSubscribed=false;
+    };
   }, [segmentValue]);
-  
-  // Add the new incoming reports to the head of the forensicsReports
-  React.useEffect(() => {
-    setForensicsReport([...incomingReports, ...forensicsReports]);
-  }, [incomingReports]);
 
   return (
     <div>
