@@ -64,7 +64,7 @@ export const rawData = [
   }
 ];
 function randomDate(start: Date, end: Date) {
-  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())).toDateString();
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 }
 
 
@@ -81,8 +81,21 @@ const generateFakeForensicsReports = (numberOfFakeReports: number) =>{
       numberOfSuspeciousNodes: Math.floor(Math.random() *10)
     });
   }
+  
+  
+  reports.sort((a, b) => {
+    return b.timestamp.getMilliseconds()-a.timestamp.getMilliseconds();
+  });
+  
   return reports;
 };
 
 
+export const loadInitialReports_last7days = generateFakeForensicsReports(2);
+export const loadInitialReports_last30days = generateFakeForensicsReports(5);
 export const loadInitialReports = generateFakeForensicsReports(20);
+
+export const loadRealtimeNewReports = () => {
+  const numberOfReports = Math.round(Math.random());
+  return generateFakeForensicsReports(numberOfReports);
+};

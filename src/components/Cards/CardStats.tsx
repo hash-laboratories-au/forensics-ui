@@ -11,7 +11,7 @@ interface CardStats {
 }
 
 
-export default function CardStats({
+const CardStats = ({
   statSubtitle ,
   statTitle,
   statArrow,
@@ -19,7 +19,7 @@ export default function CardStats({
   statDescripiron,
   statIconColor,
   icon
-}: CardStats) {
+}: CardStats) => {
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
@@ -63,4 +63,6 @@ export default function CardStats({
       </div>
     </>
   );
-}
+};
+
+export default CardStats;
