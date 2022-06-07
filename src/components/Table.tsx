@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Table, Segmented } from 'antd';
+import { Table, Segmented, Button } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
 
 
 import { loadInitialForensicsReports, loadNewForensicsReports } from '../client/forensicsServer';
+import DetailedForensicsEventModal from './DetailedForensicsEventModal';
 
 
 type DataType = {
@@ -15,6 +16,46 @@ type DataType = {
   numberOfSuspeciousNodes: number;
 }
 
+
+const LAST_7_DAYS = 'Last 7 Days';
+const LAST_30_DAYS = 'Last 30 days';
+const ALL_HISTORY = 'All History';
+
+const ForensicsTable = () => {
+  const [segmentValue, setSegmentValue]: [string, (v: string) => void] = React.useState<string>(LAST_7_DAYS);
+  const [forensicsReports, setForensicsReports] = React.useState<DataType[]>([]);
+  
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
+  
+  const [selectedForensicsId, setSelectedForensicsEventId] = React.useState('');
+  const showModal = (key: React.Key) => {
+    setIsModalVisible(true);
+    setSelectedForensicsEventId(key.toString());
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  
+  const onSegmentValueChange = (v: string) => {
+    setForensicsReports([]);
+    setSegmentValue(v);
+  };
+  
+  const subscribeToRealtimeForensicsReport = () => {
+    setInterval(async () => {
+      const newForensicsReports = await loadNewForensicsReports();
+      if (newForensicsReports.length) {
+        setForensicsReports(p => ([...newForensicsReports, ...p]));
+      }
+    }, 5000);
+  };
+  React.useEffect(() => {
+    subscribeToRealtimeForensicsReport();
+  }, []);
+  
+  
+  
 const columns: ColumnsType<DataType> = [
   {
     title: 'Diverging Number',
@@ -47,37 +88,17 @@ const columns: ColumnsType<DataType> = [
   },
   {
     title: 'Action',
-    key: 'operation',
+    key: 'action',
+    dataIndex: 'action',
     fixed: 'right',
     width: 150,
-    render: () => <a>Show more</a>,
+    render: (_, record: { key: React.Key }) => forensicsReports.length >= 1 ? (
+      <Button type="primary" onClick={() => showModal(record.key)}>
+        Show more
+      </Button>
+    ) : null,
   },
 ];
-
-const LAST_7_DAYS = 'Last 7 Days';
-const LAST_30_DAYS = 'Last 30 days';
-const ALL_HISTORY = 'All History';
-
-const ForensicsTable = () => {
-  const [segmentValue, setSegmentValue]: [string, (v: string) => void] = React.useState<string>(LAST_7_DAYS);
-  const [forensicsReports, setForensicsReports] = React.useState<DataType[]>([]);
-  
-  const onSegmentValueChange = (v: string) => {
-    setForensicsReports([]);
-    setSegmentValue(v);
-  };
-  
-  const subscribeToRealtimeForensicsReport = () => {
-    setInterval(async () => {
-      const newForensicsReports = await loadNewForensicsReports();
-      if (newForensicsReports.length) {
-        setForensicsReports(p => ([...newForensicsReports, ...p]));
-      }
-    }, 5000);
-  };
-  React.useEffect(() => {
-    subscribeToRealtimeForensicsReport();
-  }, []);
   
   React.useEffect(() => {
     let isSubscribed = true;
@@ -99,6 +120,7 @@ const ForensicsTable = () => {
       <Segmented size="large" options={[LAST_7_DAYS, LAST_30_DAYS, ALL_HISTORY]} value={segmentValue} onChange={onSegmentValueChange}/>
       <br></br>
       <Table columns={columns} dataSource={forensicsReports} scroll={{ x: 1300 }} />
+      <DetailedForensicsEventModal isModalVisible={isModalVisible} handleCancel={handleCancel} forensicsId={selectedForensicsId}></DetailedForensicsEventModal>
     </div>
   ); 
 };

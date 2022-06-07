@@ -1,5 +1,5 @@
 import * as React from "react";
-import CardStats from "./Cards/CardStats";
+import CardStats from "./CardStats";
 import { WarningOutlined, GlobalOutlined, SyncOutlined, LoadingOutlined} from '@ant-design/icons';
 import { Typography, Popover } from "antd";
 import { getLatestSummary } from "../client/forensicsServer";
@@ -20,7 +20,7 @@ interface LatestSummary {
 const getShortHash = (hash?: string) => {
   if (!hash) return '';
   const firstFour = hash.substring(0,4);
-  const lastFour = hash.substring(hash.length-5,hash.length-1);
+  const lastFour = hash.substring(hash.length-4,hash.length);
   return firstFour+'xxx'+lastFour;
 };
 

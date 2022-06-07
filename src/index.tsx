@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 
 import './assets/styles/tailwind.css';
@@ -7,7 +7,9 @@ import 'antd/dist/antd.css';
 
 import ForensicsDashboard from './views/ForensicsDashboard';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById("root"));
+
+root.render(
   <BrowserRouter>
     <Routes>
       {/* add routes with layouts */}
@@ -18,6 +20,5 @@ ReactDOM.render(
         element={<Navigate to="/" replace />}
     />
     </Routes>
-  </BrowserRouter>,
-  document.getElementById('root')
+  </BrowserRouter>
 );

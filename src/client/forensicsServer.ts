@@ -36,7 +36,7 @@ export const loadInitialForensicsReports = async (range: string) => {
 };
 
 export const loadNewForensicsReports = async (lastItemId?: string) => {
-  await sleep(1000);
+  await sleep(2000);
   return loadRealtimeNewReports().map(r => {
     return {
       ...r,
