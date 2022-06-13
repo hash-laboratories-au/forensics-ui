@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.node__root > circle {
+  fill: green;
+}
+
+.node__branch > circle {
+  fill: red;
+}
+
+.node__leaf > circle {
+  fill: red;
+}

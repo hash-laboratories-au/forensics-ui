@@ -1,68 +1,85 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import { v4 as uuidv4 } from 'uuid';
+import { ForensicsEventType } from '../forensicsServer';
 
-export const rawData = [
-  {
-    "DivergingHash": "0x11111111111111",
-  	"AcrossEpochs":  true,
-  	"SmallerRoundInfo": {
-  			"HashPath": ["0x1, 0x2, 0x3"],
-  			"QuorumCert": {
-  			  "ProposedBlockInfo": {
-  			    "Hash": "0x123",
-  			    "Round": 10,
-  			    "Number": 123123123
-  			  },
-  			  "Signatures": ["signatures-1", "signatures-2", "signatures-3"],
-  			  "GapNumber": 450
-  			},
-  			"SignerAddresses": ["signer-1", "signer-2", "signer-3"]
-  		},
-  	"LargerRoundInfo": {
-      "HashPath": ["0x1, 0xb, 0xc, 0xd"],
-      "QuorumCert": {
-        "ProposedBlockInfo": {
-          "Hash": "0x123123",
-          "Round": 11,
-          "Number": 123123124
-        },
-        "Signatures": ["signatures-1", "signatures-2", "signatures-3", "signatures-4"],
-        "GapNumber": 450
-      },
-      "SignerAddresses": ["signer-1", "signer-2", "signer-3", "signer-4"]
-  		}
+
+export const fakeNodeInfo = {
+  "_id": "61b445c157e3dc5f84283eb7",
+  "candidate": "xdc374b7cc91c918c32a1149bd73b9527076e86bba4",
+  "smartContractAddress": "0x0000000000000000000000000000000000000088",
+  "__v": 0,
+  "capacity": "1e+25",
+  "capacityNumber": 10000000,
+  "createdAt": "2021-12-11T06:31:29.276Z",
+  "nodeId": "374b7cc91c918c32a1149bd73b9527076e86bba4",
+  "owner": "xdc065551f0dcac6f00cae11192d462db709be3758c",
+  "status": "MASTERNODE",
+  "updatedAt": "2022-06-13T01:21:20.480Z",
+  "latestSignedBlock": 33670860,
+  "rank": 1,
+  "dataCenter": {
+      "location": "Africa",
+      "name": "IndSoft"
   },
-  {
-    "DivergingHash": "0x22222222222",
-  	"AcrossEpochs":  false,
-  	"SmallerRoundInfo": {
-  			"HashPath": ["0x1, 0x2, 0x3"],
-  			"QuorumCert": {
-  			  "ProposedBlockInfo": {
-  			    "Hash": "0x123",
-  			    "Round": 10,
-  			    "Number": 422323423
-  			  },
-  			  "Signatures": ["signatures-1", "signatures-2", "signatures-3"],
-  			  "GapNumber": 450
-  			},
-  			"SignerAddresses": ["signer-1", "signer-2", "signer-3"]
-  		},
-  	"LargerRoundInfo": {
-      "HashPath": ["0x1, 0xb, 0xc, 0xd"],
-      "QuorumCert": {
-        "ProposedBlockInfo": {
-          "Hash": "0x123123",
-          "Round": 11,
-          "Number": 485343548
-        },
-        "Signatures": ["signatures-1", "signatures-2", "signatures-3", "signatures-4"],
-        "GapNumber": 450
-      },
-      "SignerAddresses": ["signer-1", "signer-2", "signer-3", "signer-4"]
-  		}
-  }
-];
+  "hardware": "128 GB Ram, 1 TB SSD, 48 vCPU",
+  "name": "Africa",
+  "socials": {
+      "telegram": "https://t.me/xinfintalk",
+      "website": "https://apothem.network"
+  },
+  "isMasternode": true,
+  "isPenalty": false,
+  "slashedTimes": 0
+}
+
+export const detailedForensicsReport = {
+  "id": uuidv4(),
+  "DivergingHash": "0x11111111111111",
+	"AcrossEpochs":  true,
+	suspeciousNodes: ["xdc123123123123", "xdc19999999999999", "xdc888888888888888"],
+	divergingPathsMap: {
+	  'name': '0x111111111',
+	  children: [
+  	  {
+  	    'name': '0x222222222',
+  	     children: [
+  	       {
+  	         'name': '0x333333333'
+  	       }
+  	     ]
+  	  },
+  	  {
+        'name': '0xbbbbbbbbb',
+        children: [
+          {
+            'name': '0xcccccccccccc',
+            children: [
+              {
+                'name': '0xdddddddddd', 
+              }
+            ] 
+          }
+        ]
+     }
+	  ]
+	},
+	eventTime: (new Date()).toTimeString(),
+	daysSinceLastEvent: '5 days',
+	eventType: 'ATTACK' as ForensicsEventType,
+	"FORK_1": {
+	  hash: "0x123",
+		round: '10',
+		number: '123123123',
+		signersAddress: ["signer-1", "signer-2", "signer-3", "signer-5"]
+	},
+	"FORK_2": {
+    hash: "0x123123",
+    round: '11',
+    number: '123123124',
+    signersAddress: ["signer-1", "signer-2", "signer-3", "signer-4"]
+	}
+};
+
 function randomDate(start: Date, end: Date) {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 }
@@ -77,7 +94,6 @@ const generateFakeForensicsReports = (numberOfFakeReports: number) =>{
       timestamp: randomDate(new Date(2020, 0, 1), new Date()),
       divergingBlockNumber: Math.floor(Math.random() *1000000),
       divergingBlockHash: `0x${uuidv4()}`,
-      numberOfAttackerNodes: Math.floor(Math.random() *100),
       numberOfSuspeciousNodes: Math.floor(Math.random() *10)
     });
   }
@@ -96,7 +112,8 @@ export const loadInitialReports_last30days = generateFakeForensicsReports(5);
 export const loadInitialReports = generateFakeForensicsReports(20);
 
 export const loadRealtimeNewReports = () => {
-  const numberOfReports = Math.round(Math.random());
+  // 1/5 ratio to load a new report
+  const numberOfReports = Math.random()*100<20 ? 1:0;
   return generateFakeForensicsReports(numberOfReports);
 };
 
@@ -118,9 +135,5 @@ export const latestSummary = () => {
   
   latestBlockNumber++;
   committedBlockNumber = latestBlockNumber -3;
-  
-  
-  
-  
   return blocks;
 };

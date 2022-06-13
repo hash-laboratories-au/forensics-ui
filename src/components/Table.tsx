@@ -12,7 +12,6 @@ type DataType = {
   timestamp: string;
   divergingBlockNumber: number;
   divergingBlockHash: string;
-  numberOfAttackerNodes: number;
   numberOfSuspeciousNodes: number;
 }
 
@@ -66,22 +65,22 @@ const columns: ColumnsType<DataType> = [
   },
   {
     title: 'Diverging Hash',
-    width: 400,
+    width: 300,
     dataIndex: 'divergingBlockHash',
     key: 'divergingBlockHash',
     fixed: 'left',
   },
   {
-    title: 'Num. attacker nodes',
-    width: 200,
-    dataIndex: 'numberOfAttackerNodes',
-    key: 'numberOfAttackerNodes',
+    title: 'Num. Suspecious nodes',
+    width: 150,
+    dataIndex: 'numberOfSuspeciousNodes',
+    key: 'numberOfSuspeciousNodes',
     fixed: 'left',
   },
 
   {
-    title: 'Date',
-    width: 150,
+    title: 'Time',
+    width: 300,
     dataIndex: 'timestamp',
     key: 'timestamp',
     fixed: 'left',
