@@ -48,15 +48,15 @@ export interface InitialForensicsReports {
 }
 
 const request = new Axios({
-  baseURL: process.env.FORENSICS_URL, // TODO: Add the baseURL of the backend service from config
+  baseURL: process.env.FORENSICS_URL,
 });
 
 const explorerRequest = new Axios({
-  baseURL: 'https://explorer.xinfin.network/api',
+  baseURL: process.env.EXPLORER_URL,
 });
 
 const masterNodeInfoRequest = new Axios({
-  baseURL: 'https://master.xinfin.network/api', // TODO: Add the baseURL of the backend service from config
+  baseURL: process.env.MASTERNODE_URL,
 });
 
 // Load the inital content from backend when the page is first landed
