@@ -2,17 +2,15 @@ import * as React from "react";
 import CardStats from "./CardStats";
 import { WarningOutlined, GlobalOutlined, SyncOutlined, LoadingOutlined} from '@ant-design/icons';
 import { Typography, Popover } from "antd";
-import { getLatestSummary } from "../client/forensicsServer";
+import { getLatestBlock, loadInitialForensicsEvents } from "../client/forensicsServer";
+
+interface Block {
+  hash: string,
+  number: string,
+}
 
 interface LatestSummary {
-  latestBlock?: {
-    hash: string,
-    number: string,
-  };
-  latestCommittedBlock?: {
-    hash: string,
-    number: string,
-  };
+  latestCommittedBlock?: Block;
   numberOfAttackEvents?: string;
   numberOfAttackers?: string;
 }
@@ -31,23 +29,32 @@ const HeaderStats = () =>{
   const loadingOutlinedIcon= <LoadingOutlined spin/>;
   
   const [latestSummary, setLatestSummary] = React.useState<LatestSummary>({});
+  const [latestBlock, setLatestBlock] = React.useState<Block>();
 
-  const periodicallyGetAndSetSummary = async () => {
-    const summary = await getLatestSummary();
-    if (summary) {
-      setLatestSummary(summary);
-    }
+  const periodicallyUpdateLatestBlock = async () => {
     const id = setInterval(async () => {
-      const summary = await getLatestSummary();
-      if (summary) {
-        setLatestSummary(summary);
+      const blockInfo = await getLatestBlock();
+      if (blockInfo) {
+        setLatestBlock(blockInfo);
       }
     }, 5000);
     return id;
   };
   
   React.useEffect(()=> {
-    periodicallyGetAndSetSummary();
+    periodicallyUpdateLatestBlock();
+    const fetchAndSetInitialReports = async() => {
+      const reports = await loadInitialForensicsEvents('LAST_1_DAY');
+      if(reports) {
+        setLatestSummary({
+          numberOfAttackers: reports.reduce((pre, cur) => {
+            return cur.numberOfSuspeciousNodes + pre;
+          }, 0).toString(),
+          numberOfAttackEvents: reports.length.toString()
+        })
+      }
+    };
+    fetchAndSetInitialReports();
   },[]);
   return (
     <>
@@ -57,18 +64,18 @@ const HeaderStats = () =>{
         <div>
           {/* Card stats */}
           <div className="flex flex-wrap">
-            <Popover content={latestSummary?.latestBlock?.hash} title='Full hash'>
+            <Popover content={latestBlock?.hash} title='Full hash'>
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                   <CardStats
                     statSubtitle="Latest Block"
-                    statTitle={latestSummary?.latestBlock?.number || ''}
-                    statDescripiron={getShortHash(latestSummary?.latestBlock?.hash)}
+                    statTitle={latestBlock?.number || ''}
+                    statDescripiron={getShortHash(latestBlock?.hash)}
                     statIconColor="bg-green-500"
                     icon={loadingOutlinedIcon}
                   />    
               </div>
             </Popover>
-            <Popover content={latestSummary?.latestCommittedBlock?.hash} title='Full hash'>
+            {/* <Popover content={latestSummary?.latestCommittedBlock?.hash} title='Full hash'>
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
                   statSubtitle="Latest Committed block"
@@ -78,7 +85,7 @@ const HeaderStats = () =>{
                   icon={syncOutlinedIcon}
                 />
               </div>
-            </Popover>
+            </Popover> */}
             <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
               <CardStats
                 statSubtitle="Num. Attack events"

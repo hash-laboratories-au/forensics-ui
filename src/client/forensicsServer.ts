@@ -1,6 +1,4 @@
-import { sleep } from './utils';
 import {Axios} from 'axios';
-import { detailedForensicsReport, fakeNodeInfo, latestSummary, loadInitialReports, loadInitialReports_last30days, loadInitialReports_last7days, loadRealtimeNewReports } from './data/simulation';
 import { RawNodeDatum } from 'react-d3-tree/lib/types/common';
 
 export type ForensicsEventType = 'ATTACK' | 'PRONE_TO_NETWORK';
@@ -13,16 +11,18 @@ interface BlockInformation {
 }
 
 export interface DetailedReport {
-  id: string;
-  DivergingHash: string;
-  AcrossEpochs: boolean;
+  key: string;
+  divergingBlockNumber: string;
+  divergingBlockHash: string;
+  forensicsType: string;
   divergingPathsMap: RawNodeDatum,
   eventTime: string;
   daysSinceLastEvent: string;
-  eventType: ForensicsEventType;
-  FORK_1: BlockInformation;
-  FORK_2: BlockInformation;
+  attackType: ForensicsEventType;
+  fork1: BlockInformation;
+  fork2: BlockInformation;
   suspeciousNodes: string[];
+  timeSinceLastEvent?: string;
 }
 
 export interface NodeInfo {
@@ -38,73 +38,100 @@ export interface NodeInfo {
   hardware: string;
 }
 
+export interface InitialForensicsReports {
+  key: string,
+  forensicsType: string;
+  eventTime: string;
+  divergingBlockNumber: number;
+  divergingBlockHash: string;
+  numberOfSuspeciousNodes: number;
+}
 
+const request = new Axios({
+  baseURL: process.env.FORENSICS_URL, // TODO: Add the baseURL of the backend service from config
+});
 
-const instance = new Axios({
-  baseURL: '', // TODO: Add the baseURL of the backend service
+const explorerRequest = new Axios({
+  baseURL: 'https://explorer.xinfin.network/api',
+});
+
+const masterNodeInfoRequest = new Axios({
+  baseURL: 'https://master.xinfin.network/api', // TODO: Add the baseURL of the backend service from config
 });
 
 // Load the inital content from backend when the page is first landed
-export const loadInitialForensicsReports = async (range: string) => {
-  // const {data} = await instance.get('/report', {
-  //   params: { range }
-  // });
-  // return data;
-  await sleep(2000);
-  let report = loadInitialReports_last7days;
-  switch (range) {
+export const loadInitialForensicsEvents = async (numOfDays: string): Promise<InitialForensicsReports[]> => {
+  // Default is 7
+  let range = '7';
+  switch (numOfDays) {
+    case 'LAST_1_DAY':
+      range = '1'
+      break;
     case 'LAST_30_DAYS':
-      report = loadInitialReports_last30days;
+      range = '30'
       break;
     case 'ALL_HISTORY':
-      report = loadInitialReports;
+      range = 'all'
       break;
     default:
       break;
   }
-  return report.map(r => {
-    return {
-      ...r,
-      ...{
-        timestamp: r.timestamp.toTimeString()
-      }
-    };
+  const {data} = await request.get('/batch/load', {
+    params: { range }
   });
-  
+  return JSON.parse(data);
 };
 
-export const loadNewForensicsReports = async (lastItemId?: string) => {
-  await sleep(2000);
-  return loadRealtimeNewReports().map(r => {
-    return {
-      ...r,
-      ...{
-        timestamp: r.timestamp.toTimeString()
-      }
-    };
-  });
-};
-
-// Summary includes latest blocks, committed blocks, number of attacks and number of attackers
-export const getLatestSummary = async (latestBlockHash?: string) => {
-  await sleep(2000);
-  return latestSummary();
+export const loadNewForensicsReports = async (lastItemId?: string): Promise<InitialForensicsReports[]> => {
+  const {data} = await request.get('/load/latest', lastItemId? {
+    params: { id: lastItemId }
+  }: {});
+  return JSON.parse(data);
 };
 
 export const getDetailedForensics = async(forensicsId: string): Promise<DetailedReport>  => {
-  await sleep(2000);
-  return detailedForensicsReport;
+  const {data} = await request.get('/load/detail', {
+    params: { id: forensicsId }
+  });
+  
+  return JSON.parse(data);
 };
 
-export const getNodeInfo = async(nodeKy: string): Promise<NodeInfo> => {
-  await sleep(2000);
-  return {
-    candidate: fakeNodeInfo.candidate,
-    createdAt: fakeNodeInfo.createdAt,
-    owner: fakeNodeInfo.owner,
-    status: fakeNodeInfo.status,
-    latestSignedBlock: fakeNodeInfo.latestSignedBlock,
-    dataCenter: fakeNodeInfo.dataCenter,
-    hardware: fakeNodeInfo.hardware,
-  };
+// Summary includes latest blocks, committed blocks, number of attacks and number of attackers
+export const getLatestBlock = async () => {
+  try {
+    const {data} = await explorerRequest.get('/txs/listByType/all?page=1&limit=1');
+    const blocks = JSON.parse(data).items;
+    if (!blocks.length) {
+      throw new Error("Not found new block");
+    }
+    return {
+      hash: blocks[0].blockHash,
+      number: blocks[0].blockNumber,
+    }
+    
+  } catch (error) {
+    console.error("Failed to get latest block", error);
+    throw error;
+  }
+};
+
+
+export const getNodeInfo = async(nodeKey: string): Promise<NodeInfo> => {
+  try {
+    const {data} = await masterNodeInfoRequest.get(`/candidates/${nodeKey}`);
+    const nodeInfo = JSON.parse(data)
+    return {
+      candidate: nodeInfo.candidate,
+      createdAt: nodeInfo.createdAt,
+      owner: nodeInfo.owner,
+      status: nodeInfo.status,
+      latestSignedBlock: nodeInfo.latestSignedBlock,
+      dataCenter: nodeInfo.dataCenter,
+      hardware: nodeInfo.hardware,
+    };
+  } catch (error) {
+    console.error("Error while fethcing node information", error);
+    throw error;
+  }
 }

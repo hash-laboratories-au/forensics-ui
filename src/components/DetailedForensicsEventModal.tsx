@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Modal, Collapse, Spin, Segmented, Divider, Space, Row, Col } from 'antd';
 import { DetailedReport, getDetailedForensics } from '../client/forensicsServer';
 import HierarchicalTreeVisualization from './HierarchicalTreeVisualization';
-import { RawNodeDatum } from 'react-d3-tree/lib/types/common';
 import ForensicsDescription from './ForensicsDescription';
 import NodeInfoPanel from './NodeInfoPanel';
 const { Panel } = Collapse;
@@ -21,7 +20,6 @@ const DetailedForensicsEventModal = (props: {
       if(props.isModalVisible) {
         const report = await getDetailedForensics(props.forensicsId);
         setDetails(report);
-        
       }
     })();
   }, [props.isModalVisible]);

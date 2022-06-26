@@ -8,10 +8,8 @@ export interface NodeInfoPanel {
 
 const NodeInfoPanel = (props: NodeInfoPanel) => {
   const [nodeInfo, setNodeInfo] = React.useState<NodeInfo>();
-  console.log("called")
   React.useEffect(() => {
     (async () => {
-      console.log("called2")
       const result = await getNodeInfo(props.nodeKey);
       setNodeInfo(result)
     })();

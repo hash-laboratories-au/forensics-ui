@@ -1,28 +1,20 @@
 import * as React from 'react';
-import { Table, Segmented, Button } from 'antd';
+import { Table, Segmented, Button, Tag } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
 
 
-import { loadInitialForensicsReports, loadNewForensicsReports } from '../client/forensicsServer';
+import { InitialForensicsReports, loadInitialForensicsEvents, loadNewForensicsReports } from '../client/forensicsServer';
 import DetailedForensicsEventModal from './DetailedForensicsEventModal';
 
 
-type DataType = {
-  key: string,
-  timestamp: string;
-  divergingBlockNumber: number;
-  divergingBlockHash: string;
-  numberOfSuspeciousNodes: number;
-}
-
 
 const LAST_7_DAYS = 'Last 7 Days';
-const LAST_30_DAYS = 'Last 30 days';
+const LAST_30_DAYS = 'Last 30 Days';
 const ALL_HISTORY = 'All History';
 
 const ForensicsTable = () => {
   const [segmentValue, setSegmentValue]: [string, (v: string) => void] = React.useState<string>(LAST_7_DAYS);
-  const [forensicsReports, setForensicsReports] = React.useState<DataType[]>([]);
+  const [forensicsReports, setForensicsReports] = React.useState<InitialForensicsReports[]>([]);
   
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   
@@ -43,7 +35,11 @@ const ForensicsTable = () => {
   
   const subscribeToRealtimeForensicsReport = () => {
     setInterval(async () => {
-      const newForensicsReports = await loadNewForensicsReports();
+      let searchingKey;
+      if(forensicsReports.length) {
+        searchingKey = forensicsReports[0].key;
+      }
+      const newForensicsReports = await loadNewForensicsReports(searchingKey);
       if (newForensicsReports.length) {
         setForensicsReports(p => ([...newForensicsReports, ...p]));
       }
@@ -55,7 +51,7 @@ const ForensicsTable = () => {
   
   
   
-const columns: ColumnsType<DataType> = [
+const columns: ColumnsType<InitialForensicsReports> = [
   {
     title: 'Diverging Number',
     width: 250,
@@ -70,6 +66,25 @@ const columns: ColumnsType<DataType> = [
     key: 'divergingBlockHash',
     fixed: 'left',
   },
+  
+  {
+    title: 'Type',
+    width: 100,
+    dataIndex: 'forensicsType',
+    key: 'forensicsType',
+    fixed: 'left',
+    render: (_, { forensicsType }) => {
+      let color = 'green';
+      if (forensicsType === 'QC') {
+        color = 'volcano';
+      }
+      return (
+        <Tag color={color} key={forensicsType}>
+          {forensicsType}
+        </Tag>
+      );    
+    },
+  },
   {
     title: 'Num. Suspecious nodes',
     width: 150,
@@ -79,11 +94,18 @@ const columns: ColumnsType<DataType> = [
   },
 
   {
-    title: 'Time',
+    title: 'Time(UTC)',
     width: 300,
-    dataIndex: 'timestamp',
-    key: 'timestamp',
+    dataIndex: 'eventTime',
+    key: 'eventTime',
     fixed: 'left',
+    render: (_, { eventTime }) => {
+      return (
+        <div>
+          {new Date(eventTime).toLocaleString('en-GB', { timeZone: 'UTC' })}
+        </div>
+      );    
+    },
   },
   {
     title: 'Action',
@@ -103,7 +125,7 @@ const columns: ColumnsType<DataType> = [
     let isSubscribed = true;
     // Fetch the inital report
     const fetchAndSetInitialReports = async() => {
-      const reports = await loadInitialForensicsReports(segmentValue.toUpperCase().split(" ").join('_'));
+      const reports = await loadInitialForensicsEvents(segmentValue);
       if (isSubscribed) {
         setForensicsReports(p => ([...reports, ...p]));
       }

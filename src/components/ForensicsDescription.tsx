@@ -1,5 +1,12 @@
 import * as React from 'react';
 import { Descriptions, Segmented, Spin } from 'antd';
+import * as moment from 'moment';
+import {
+  NumberOutlined,
+  CalculatorTwoTone,
+  DashboardTwoTone
+} from '@ant-design/icons';
+
 import ForensicsReasonTag from './ForensicsReasonTag';
 import { ForensicsEventType } from '../client/forensicsServer';
 
@@ -12,38 +19,47 @@ interface ForensicsDescriptionData {
 
 export interface ForensicsDescriptionProps {
   data: {
-    FORK_1: ForensicsDescriptionData;
-    FORK_2: ForensicsDescriptionData;
+    fork1: ForensicsDescriptionData;
+    fork2: ForensicsDescriptionData;
     eventTime: string;
-    daysSinceLastEvent: string;
-    eventType: ForensicsEventType;
+    attackType: ForensicsEventType;
+    timeSinceLastEvent?: string;
   }
 }
 
 const ForensicsDescription = (props: ForensicsDescriptionProps) => {
-  const [descriptionKey, setDescriptionKey] = React.useState<'FORK_1' | 'FORK_2'>('FORK_1');
-  const [descriptionData, setDescriptionData] = React.useState<ForensicsDescriptionData>({} as ForensicsDescriptionData);
-  
-  React.useEffect(() => {
-    setDescriptionData(props.data[descriptionKey]);
-  },[descriptionKey])
-  
 
   return (
     <div>
-      <Segmented block options={['FORK_1', 'FORK_2']} value={descriptionKey} onChange={setDescriptionKey as any} ></Segmented>
-      <br/>
       <Descriptions bordered>
-        <Descriptions.Item label="Block Number">{descriptionData.number || ''}</Descriptions.Item>
-        <Descriptions.Item label="Block Hash">{descriptionData.hash || ''}</Descriptions.Item>
-        <Descriptions.Item label="Block Round">{descriptionData.round || ''}</Descriptions.Item>
-        <Descriptions.Item label="Event Time">{props.data.eventTime}</Descriptions.Item>
-        <Descriptions.Item label="Days since last event" span={2}>
-          {props.data.daysSinceLastEvent}
+        <Descriptions.Item label="Fork 1 Block Info" span={3}>
+          <div>
+            Block Number: {props.data.fork1.number || ''}
+            <br/>
+            Block Hash: {props.data.fork1.hash || ''}
+            <br/>
+            Block Round {props.data.fork1.round || ''}
+          </div>          
         </Descriptions.Item>
+        
+        <Descriptions.Item label="Fork 2 Block Info" span={3}>
+          <div>
+              Block Number: {props.data.fork2.number || ''}
+              <br/>
+              Block Hash: {props.data.fork2.hash || ''}
+              <br/>
+              Block Round {props.data.fork2.round || ''}
+          </div>          
+        </Descriptions.Item>
+
         <Descriptions.Item label="Type" span={3}>
-          <ForensicsReasonTag eventType={props.data.eventType}></ForensicsReasonTag>
+          <ForensicsReasonTag eventType={props.data.attackType}></ForensicsReasonTag>
         </Descriptions.Item>
+        <Descriptions.Item label="Event Time(UTC)">{new Date(props.data.eventTime).toLocaleString('en-GB', { timeZone: 'UTC' })}</Descriptions.Item>
+        <Descriptions.Item label="Time since last event" span={2}>
+          {props.data.timeSinceLastEvent? moment.duration(props.data.timeSinceLastEvent).humanize(true): 'Nah'}
+        </Descriptions.Item>
+        
       </Descriptions>
     </div>
     
