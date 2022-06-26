@@ -34,8 +34,8 @@ export const fakeNodeInfo = {
 
 export const detailedForensicsReport = {
   "id": uuidv4(),
-  "DivergingHash": "0x11111111111111",
-	"AcrossEpochs":  true,
+  forensicsType: 'QC',
+  divergingBlockHash: "0x11111111111111",
 	suspeciousNodes: ["xdc123123123123", "xdc19999999999999", "xdc888888888888888"],
 	divergingPathsMap: {
 	  'name': '0x111111111',
@@ -66,17 +66,15 @@ export const detailedForensicsReport = {
 	eventTime: (new Date()).toTimeString(),
 	daysSinceLastEvent: '5 days',
 	eventType: 'ATTACK' as ForensicsEventType,
-	"FORK_1": {
+	fork1: {
 	  hash: "0x123",
 		round: '10',
 		number: '123123123',
-		signersAddress: ["signer-1", "signer-2", "signer-3", "signer-5"]
 	},
-	"FORK_2": {
+	fork2: {
     hash: "0x123123",
     round: '11',
     number: '123123124',
-    signersAddress: ["signer-1", "signer-2", "signer-3", "signer-4"]
 	}
 };
 
