@@ -1,5 +1,6 @@
-# forensics-ui
+# Forensics-ui
 
+## Dev setup
 UI of XDC Forensics monitoring
 
 ```
@@ -9,3 +10,8 @@ npm run dev
 ```
 
 Go to http://localhost:8080
+
+## How to deploy
+```
+npm run deploy
+```
