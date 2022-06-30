@@ -1,19 +1,14 @@
 import * as React from 'react';
-import { Descriptions, Segmented, Spin } from 'antd';
+import { Descriptions} from 'antd';
 import * as moment from 'moment';
-import {
-  NumberOutlined,
-  CalculatorTwoTone,
-  DashboardTwoTone
-} from '@ant-design/icons';
 
 import ForensicsReasonTag from './ForensicsReasonTag';
 import { ForensicsEventType } from '../client/forensicsServer';
 
 interface ForensicsDescriptionData {
-  number: string;
-  hash: string;
-  round: string;
+  Number: string;
+  Hash: string;
+  Round: string;
 }
 
 
@@ -34,21 +29,21 @@ const ForensicsDescription = (props: ForensicsDescriptionProps) => {
       <Descriptions bordered>
         <Descriptions.Item label="Fork 1 Block Info" span={3}>
           <div>
-            Block Number: {props.data.fork1.number || ''}
+            Block Number: {props.data.fork1.Number || ''}
             <br/>
-            Block Hash: {props.data.fork1.hash || ''}
+            Block Hash: {props.data.fork1.Hash || ''}
             <br/>
-            Block Round {props.data.fork1.round || ''}
+            Block Round {props.data.fork1.Round || ''}
           </div>          
         </Descriptions.Item>
         
         <Descriptions.Item label="Fork 2 Block Info" span={3}>
           <div>
-              Block Number: {props.data.fork2.number || ''}
+              Block Number: {props.data.fork2.Number || ''}
               <br/>
-              Block Hash: {props.data.fork2.hash || ''}
+              Block Hash: {props.data.fork2.Hash || ''}
               <br/>
-              Block Round {props.data.fork2.round || ''}
+              Block Round {props.data.fork2.Round || ''}
           </div>          
         </Descriptions.Item>
 

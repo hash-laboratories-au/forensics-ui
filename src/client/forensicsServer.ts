@@ -4,10 +4,10 @@ import { RawNodeDatum } from 'react-d3-tree/lib/types/common';
 export type ForensicsEventType = 'ATTACK' | 'PRONE_TO_NETWORK';
 
 interface BlockInformation {
-  hash: string;
-  round: string;
-  number: string
-  signersAddress: string[]
+  Hash: string;
+  Round: string;
+  Number: string
+  SignersAddress: string[]
 }
 
 export interface DetailedReport {
