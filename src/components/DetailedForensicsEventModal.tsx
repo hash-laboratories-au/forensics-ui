@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Modal, Collapse, Spin, Segmented, Divider, Space, Row, Col } from 'antd';
+import { Modal, Collapse, Spin, Divider, Row, Col } from 'antd';
 import { DetailedReport, getDetailedForensics } from '../client/forensicsServer';
 import HierarchicalTreeVisualization from './HierarchicalTreeVisualization';
 import ForensicsDescription from './ForensicsDescription';

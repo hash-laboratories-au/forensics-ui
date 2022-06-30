@@ -3,7 +3,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const Dotenv = require('dotenv-webpack');
 
-const env = process.env.NODE_ENV;
 module.exports = {
   entry: './src/index.tsx',
   devtool: 'inline-source-map',
@@ -37,7 +36,7 @@ module.exports = {
   },
   plugins: [
     new Dotenv({
-      path: `./config/${env === "production" ? "production" : "dev"}/.env`,
+      path: `./config/${process.env.NODE_ENV == "production" ? "production" : "dev"}/.env`,
     }),
     new MiniCssExtractPlugin({
       filename: "./tailwind.css",

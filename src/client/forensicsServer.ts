@@ -12,7 +12,7 @@ interface BlockInformation {
 
 export interface DetailedReport {
   key: string;
-  divergingBlockNumber: string;
+  divergingBlockNumber: number;
   divergingBlockHash: string;
   forensicsType: string;
   divergingPathsMap: RawNodeDatum,
