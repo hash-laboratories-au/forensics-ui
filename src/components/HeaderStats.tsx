@@ -46,10 +46,15 @@ const HeaderStats = () =>{
     const fetchAndSetInitialReports = async() => {
       const reports = await loadInitialForensicsEvents('LAST_1_DAY');
       if(reports) {
+        const attackers = reports.flatMap(r => {
+          return r.suspeciousNodes
+        });
+        const uniqueAttackers = attackers?.filter((v,i) => {
+          return attackers.indexOf(v) == i
+        })?.length || 0;
+      
         setLatestSummary({
-          numberOfAttackers: reports.reduce((pre, cur) => {
-            return cur.numberOfSuspeciousNodes + pre;
-          }, 0).toString(),
+          numberOfAttackers: uniqueAttackers.toString(),
           numberOfAttackEvents: reports.length.toString()
         })
       }

@@ -47,7 +47,7 @@ export interface InitialForensicsReports {
   eventTime: string;
   divergingBlockNumber: number;
   divergingBlockHash: string;
-  numberOfSuspeciousNodes: number;
+  suspeciousNodes: string[];
 }
 
 const request = new Axios({
