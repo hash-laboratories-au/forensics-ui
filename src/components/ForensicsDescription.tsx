@@ -3,19 +3,13 @@ import { Descriptions} from 'antd';
 import * as moment from 'moment';
 
 import ForensicsReasonTag from './ForensicsReasonTag';
-import { ForensicsEventType } from '../client/forensicsServer';
-
-interface ForensicsDescriptionData {
-  Number: string;
-  Hash: string;
-  Round: string;
-}
+import { BlockInformation, ForensicsEventType } from '../client/forensicsServer';
 
 
 export interface ForensicsDescriptionProps {
   data: {
-    fork1: ForensicsDescriptionData;
-    fork2: ForensicsDescriptionData;
+    fork1: BlockInformation;
+    fork2: BlockInformation;
     eventTime: string;
     attackType: ForensicsEventType;
     timeSinceLastEvent?: string;
@@ -23,27 +17,26 @@ export interface ForensicsDescriptionProps {
 }
 
 const ForensicsDescription = (props: ForensicsDescriptionProps) => {
-
   return (
     <div>
       <Descriptions bordered>
         <Descriptions.Item label="Fork 1 Block Info" span={3}>
           <div>
-            Block Number: {props.data.fork1.Number || ''}
+            Block Number: {props.data.fork1.blockInfo.Number || ''}
             <br/>
-            Block Hash: {props.data.fork1.Hash || ''}
+            Block Hash: {props.data.fork1.blockInfo.Hash || ''}
             <br/>
-            Block Round {props.data.fork1.Round || ''}
+            Block Round {props.data.fork1.blockInfo.Round || ''}
           </div>          
         </Descriptions.Item>
         
         <Descriptions.Item label="Fork 2 Block Info" span={3}>
           <div>
-              Block Number: {props.data.fork2.Number || ''}
+              Block Number: {props.data.fork2.blockInfo.Number || ''}
               <br/>
-              Block Hash: {props.data.fork2.Hash || ''}
+              Block Hash: {props.data.fork2.blockInfo.Hash || ''}
               <br/>
-              Block Round {props.data.fork2.Round || ''}
+              Block Round {props.data.fork2.blockInfo.Round || ''}
           </div>          
         </Descriptions.Item>
 
