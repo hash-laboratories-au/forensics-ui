@@ -102,7 +102,7 @@ const HeaderStats = () =>{
             </div>
             <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
               <CardStats
-                statSubtitle="Num. Attacker"
+                statSubtitle="Num. Attackers"
                 statTitle={latestSummary?.numberOfAttackers || ''}
                 statDescripiron="Last 24h"
                 statIconColor="bg-orange-500"
