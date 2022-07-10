@@ -54,14 +54,6 @@ const request = new Axios({
   baseURL: process.env.FORENSICS_URL,
 });
 
-const explorerRequest = new Axios({
-  baseURL: process.env.EXPLORER_URL,
-});
-
-const masterNodeInfoRequest = new Axios({
-  baseURL: process.env.MASTERNODE_URL,
-});
-
 // Load the inital content from backend when the page is first landed
 export const loadInitialForensicsEvents = async (numOfDays: string): Promise<InitialForensicsReports[]> => {
   // Default is 7
@@ -114,7 +106,7 @@ export const getDetailedForensics = async(forensicsId: string): Promise<Detailed
 
 export const getNodeInfo = async(nodeKey: string): Promise<NodeInfo> => {
   try {
-    const {data} = await masterNodeInfoRequest.get(`/candidates/${nodeKey}`);
+    const {data} = await request.get(`/masternode?address=${nodeKey}`);
     const nodeInfo = JSON.parse(data)
     return {
       candidate: nodeInfo.candidate,
