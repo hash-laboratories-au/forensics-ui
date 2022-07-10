@@ -22,10 +22,10 @@ const NodeInfoPanel = (props: NodeInfoPanel) => {
       <Descriptions.Item label="Owner Address">{nodeInfo.owner}</Descriptions.Item>
       <Descriptions.Item label="Coinbase Address">{nodeInfo.candidate}</Descriptions.Item>
       <Descriptions.Item label="Status">{nodeInfo.status}</Descriptions.Item>
-      <Descriptions.Item label="Hardware">{nodeInfo.hardware}</Descriptions.Item>
+      <Descriptions.Item label="Hardware">{nodeInfo.hardware || 'N/A'}</Descriptions.Item>
       <Descriptions.Item label="Node Creation date">{nodeInfo.createdAt}</Descriptions.Item>
-      <Descriptions.Item label="Node name">{nodeInfo.dataCenter.name}</Descriptions.Item>
-      <Descriptions.Item label="Location">{nodeInfo.dataCenter.location}</Descriptions.Item>
+      <Descriptions.Item label="Node name">{nodeInfo.dataCenter?.name || 'N/A'}</Descriptions.Item>
+      <Descriptions.Item label="Location">{nodeInfo.dataCenter?.location || 'N/A'}</Descriptions.Item>
     </Descriptions>
     : 
     <Spin />

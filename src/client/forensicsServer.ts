@@ -34,11 +34,11 @@ export interface NodeInfo {
   owner: string;
   status: string;
   latestSignedBlock: number;
-  dataCenter: {
+  dataCenter?: {
     location: string;
     name: string;
   }
-  hardware: string;
+  hardware?: string;
 }
 
 export interface InitialForensicsReports {
