@@ -85,11 +85,22 @@ export const loadInitialForensicsEvents = async (numOfDays: string): Promise<Ini
   return JSON.parse(data);
 };
 
+let latestMinedBlock = { blockHash: '', blockNumber: '0'}
+export const getLatestBlock = () => {
+  return latestMinedBlock;
+}
+
 export const loadNewForensicsReports = async (lastItemId?: string): Promise<InitialForensicsReports[]> => {
   const {data} = await request.get('/load/latest', lastItemId? {
     params: { id: lastItemId }
   }: {});
-  return JSON.parse(data);
+  const latest = JSON.parse(data);
+  // A shortcut to update latest mined block
+  if(latest?.latestBlockInfo) {
+    latestMinedBlock = latest?.latestBlockInfo
+  }
+  
+  return latest.forensics;
 };
 
 export const getDetailedForensics = async(forensicsId: string): Promise<DetailedReport>  => {
@@ -98,25 +109,6 @@ export const getDetailedForensics = async(forensicsId: string): Promise<Detailed
   });
   
   return JSON.parse(data);
-};
-
-// Summary includes latest blocks, committed blocks, number of attacks and number of attackers
-export const getLatestBlock = async () => {
-  try {
-    const {data} = await explorerRequest.get('/txs/listByType/all?page=1&limit=1');
-    const blocks = JSON.parse(data).items;
-    if (!blocks.length) {
-      throw new Error("Not found new block");
-    }
-    return {
-      hash: blocks[0].blockHash,
-      number: blocks[0].blockNumber,
-    }
-    
-  } catch (error) {
-    console.error("Failed to get latest block", error);
-    throw error;
-  }
 };
 
 

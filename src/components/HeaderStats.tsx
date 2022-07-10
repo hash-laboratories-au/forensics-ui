@@ -5,8 +5,8 @@ import { Typography, Popover } from "antd";
 import { getLatestBlock, loadInitialForensicsEvents } from "../client/forensicsServer";
 
 interface Block {
-  hash: string,
-  number: string,
+  blockNumber: string,
+  blockHash: string,
 }
 
 interface LatestSummary {
@@ -33,7 +33,7 @@ const HeaderStats = () =>{
 
   const periodicallyUpdateLatestBlock = async () => {
     const id = setInterval(async () => {
-      const blockInfo = await getLatestBlock();
+      const blockInfo = getLatestBlock();
       if (blockInfo) {
         setLatestBlock(blockInfo);
       }
@@ -69,12 +69,12 @@ const HeaderStats = () =>{
         <div>
           {/* Card stats */}
           <div className="flex flex-wrap">
-            <Popover content={latestBlock?.hash} title='Full hash'>
+            <Popover content={latestBlock?.blockHash} title='Full hash'>
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                   <CardStats
                     statSubtitle="Latest Block"
-                    statTitle={latestBlock?.number || ''}
-                    statDescripiron={getShortHash(latestBlock?.hash)}
+                    statTitle={latestBlock?.blockNumber || ''}
+                    statDescripiron={getShortHash(latestBlock?.blockHash)}
                     statIconColor="bg-green-500"
                     icon={loadingOutlinedIcon}
                   />    
