@@ -77,9 +77,18 @@ export const loadInitialForensicsEvents = async (numOfDays: string): Promise<Ini
   return JSON.parse(data);
 };
 
-let latestMinedBlock = { blockHash: '', blockNumber: '0'}
+let latestBlocks = {
+  highestBlockMined: { 
+    blockHash: '',
+    blockNumber: '0'
+  },
+  highestCommittedBlock: {
+    blockHash: '',
+    blockNumber: '0'
+  }
+}
 export const getLatestBlock = () => {
-  return latestMinedBlock;
+  return latestBlocks;
 }
 
 export const loadNewForensicsReports = async (lastItemId?: string): Promise<InitialForensicsReports[]> => {
@@ -88,8 +97,11 @@ export const loadNewForensicsReports = async (lastItemId?: string): Promise<Init
   }: {});
   const latest = JSON.parse(data);
   // A shortcut to update latest mined block
-  if(latest?.latestBlockInfo) {
-    latestMinedBlock = latest?.latestBlockInfo
+  if(latest?.latestBlockInfo && latest.highestCommittedBlockInfo) {
+    latestBlocks = {
+      highestBlockMined: latest.latestBlockInfo,
+      highestCommittedBlock: latest.highestCommittedBlockInfo
+    }
   }
   
   return latest.forensics;

@@ -29,7 +29,7 @@ const HeaderStats = () =>{
   const loadingOutlinedIcon= <LoadingOutlined spin/>;
   
   const [latestSummary, setLatestSummary] = React.useState<LatestSummary>({});
-  const [latestBlock, setLatestBlock] = React.useState<Block>();
+  const [latestBlock, setLatestBlock] = React.useState<{highestBlockMined: Block, highestCommittedBlock: Block}>();
 
   const periodicallyUpdateLatestBlock = async () => {
     const id = setInterval(async () => {
@@ -69,28 +69,28 @@ const HeaderStats = () =>{
         <div>
           {/* Card stats */}
           <div className="flex flex-wrap">
-            <Popover content={latestBlock?.blockHash} title='Full hash'>
+            <Popover content={latestBlock?.highestBlockMined?.blockHash} title='Full hash'>
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                   <CardStats
                     statSubtitle="Latest Block"
-                    statTitle={latestBlock?.blockNumber || ''}
-                    statDescripiron={getShortHash(latestBlock?.blockHash)}
+                    statTitle={latestBlock?.highestBlockMined?.blockNumber || ''}
+                    statDescripiron={getShortHash(latestBlock?.highestBlockMined?.blockHash)}
                     statIconColor="bg-green-500"
                     icon={loadingOutlinedIcon}
                   />    
               </div>
             </Popover>
-            {/* <Popover content={latestSummary?.latestCommittedBlock?.hash} title='Full hash'>
+            <Popover content={latestBlock?.highestCommittedBlock?.blockHash} title='Full hash'>
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
                   statSubtitle="Latest Committed block"
-                  statTitle={latestSummary?.latestCommittedBlock?.number || ''}
-                  statDescripiron={getShortHash(latestSummary?.latestCommittedBlock?.hash)}
+                  statTitle={latestBlock?.highestCommittedBlock?.blockNumber || ''}
+                  statDescripiron={getShortHash(latestBlock?.highestCommittedBlock?.blockHash)}
                   statIconColor="bg-blue-500"
                   icon={syncOutlinedIcon}
                 />
               </div>
-            </Popover> */}
+            </Popover>
             <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
               <CardStats
                 statSubtitle="Num. Attack events"
